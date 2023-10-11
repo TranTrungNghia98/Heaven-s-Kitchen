@@ -3,15 +3,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Player : MonoBehaviour
+public class Player : MonoBehaviour, IKitchenObjectParent
 {
     public static Player Instance { get; private set; }
 
     public event EventHandler<OnSelectedCounterChangedEventArgs> OnSelectedCounterChanged;
     public class OnSelectedCounterChangedEventArgs : EventArgs
     {
-        public ClearCounter selectedClearCounter;
+        public BaseCounter selectedClearCounter;
     }
+
+    [SerializeField] Transform kitchenParentTopPoint;
+    private KitchenObject kitchenObject;
 
     [SerializeField] private float moveSpeed = 7.0f;
     [SerializeField] private GameInput gameInput;
@@ -19,7 +22,7 @@ public class Player : MonoBehaviour
     private Vector3 lastInteractDirection;
 
     private bool isWalking;
-    private ClearCounter selectedClearCounter;
+    private BaseCounter selectedClearCounter;
 
     private void Awake()
     {
@@ -40,7 +43,7 @@ public class Player : MonoBehaviour
     {
         if (selectedClearCounter != null)
         {
-            selectedClearCounter.Interact();
+            selectedClearCounter.Interact(this);
         }
     }
 
@@ -130,7 +133,7 @@ public class Player : MonoBehaviour
         // Check is player interacting with something or not
         if (Physics.Raycast(transform.position, lastInteractDirection, out RaycastHit raycastHit, interactDistance, countersLayerMask))
         {
-            if(raycastHit.transform.TryGetComponent(out ClearCounter clearCounter))
+            if(raycastHit.transform.TryGetComponent(out BaseCounter clearCounter))
             {
                 if(selectedClearCounter !=  clearCounter)
                 {
@@ -151,15 +154,39 @@ public class Player : MonoBehaviour
 
     }
 
-    private void SetSelectedCounter(ClearCounter clearCounter)
+    private void SetSelectedCounter(BaseCounter baseCounter)
     {
-        this.selectedClearCounter = clearCounter;
+        this.selectedClearCounter = baseCounter;
 
         OnSelectedCounterChanged?.Invoke(this, new OnSelectedCounterChangedEventArgs 
         { 
-            selectedClearCounter = clearCounter 
+            selectedClearCounter = baseCounter 
         }
         );
     }
 
+    public Transform GetKitchenObjectFollowPoint()
+    {
+        return kitchenParentTopPoint;
+    }
+
+    public void SetKitchenObject(KitchenObject kitchenObject)
+    {
+        this.kitchenObject = kitchenObject;
+    }
+
+    public KitchenObject GetKitchenObject()
+    {
+        return kitchenObject;
+    }
+
+    public void ClearKitchenObject()
+    {
+        kitchenObject = null;
+    }
+
+    public bool HasKitchenObject()
+    {
+        return kitchenObject != null;
+    }
 }
