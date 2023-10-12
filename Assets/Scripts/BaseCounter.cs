@@ -4,15 +4,17 @@ using UnityEngine;
 
 public class BaseCounter : MonoBehaviour, IKitchenObjectParent
 {
-
     [SerializeField] Transform kitchenParentTopPoint;
-
-    [SerializeField] BaseCounter secondClearCounter;
     private KitchenObject kitchenObject;
 
     public virtual void Interact(Player player)
     {
         Debug.Log("Interact()");
+    }
+
+    public virtual void Interactnate(Player player)
+    {
+        Debug.Log("Interactnate()");
     }
 
     public Transform GetKitchenObjectFollowPoint()
