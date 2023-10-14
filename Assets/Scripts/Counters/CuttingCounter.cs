@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class CuttingCounter : BaseCounter, IHasProgress
 {
-    public event EventHandler <IHasProgress.OnProgressChangedEventArgs> OnProgressChanged;
+    public event EventHandler<IHasProgress.OnProgressChangedEventArgs> OnProgressChanged;
 
     public event EventHandler OnCut;
 
@@ -22,7 +22,7 @@ public class CuttingCounter : BaseCounter, IHasProgress
             if (player.HasKitchenObject())
             {
                 // If player hold something can be cut. Put it on cutting counter
-                if(HasRecipeWithInput(player.GetKitchenObject().GetKitchenObjectSO()))
+                if (HasRecipeWithInput(player.GetKitchenObject().GetKitchenObjectSO()))
                 {
                     player.GetKitchenObject().SetKitchenObjectParent(this);
                     cuttingProgress = 0;
@@ -47,7 +47,18 @@ public class CuttingCounter : BaseCounter, IHasProgress
             // If player hold something
             if (player.HasKitchenObject())
             {
-                // Do nothing
+
+                // If player is holding a plate
+                if (player.GetKitchenObject().TryGetPlateKitchenObject(out PlateKitchenObject plateKitchenObject))
+                {
+
+                    if (plateKitchenObject.TryAddIngredient(GetKitchenObject().GetKitchenObjectSO()))
+                    {
+                        GetKitchenObject().DestroySelf();
+                    }
+
+                }
+
             }
             // If player doesn't hold something
             else
@@ -61,7 +72,7 @@ public class CuttingCounter : BaseCounter, IHasProgress
     public override void Interactnate(Player player)
     {
         // If cutting counter has something and it and it can be cut. Cut it
-        if (HasKitchenObject() && HasRecipeWithInput(GetKitchenObject().GetKitchenObjectSO()) )
+        if (HasKitchenObject() && HasRecipeWithInput(GetKitchenObject().GetKitchenObjectSO()))
         {
             cuttingProgress++;
             CuttingRecipeSO cuttingRecipeSO = GetCuttingRecipeSOWithInput(GetKitchenObject().GetKitchenObjectSO());
@@ -82,7 +93,7 @@ public class CuttingCounter : BaseCounter, IHasProgress
                 KitchenObject.SpawnKitchenObject(cuttingObjectSO, this);
             }
 
-            
+
         }
 
         else
@@ -95,7 +106,7 @@ public class CuttingCounter : BaseCounter, IHasProgress
     {
         CuttingRecipeSO cuttingRecipeSO = GetCuttingRecipeSOWithInput(inputKitchenObjectSO);
 
-       if (cuttingRecipeSO != null)
+        if (cuttingRecipeSO != null)
         {
             return cuttingRecipeSO.output;
         }

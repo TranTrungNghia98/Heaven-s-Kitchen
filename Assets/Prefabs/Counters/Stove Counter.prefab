@@ -99,6 +99,10 @@ PrefabInstance:
       propertyPath: iHasProgressGameObject
       value: 
       objectReference: {fileID: 3531200837100296738}
+    - target: {fileID: 4620841175524743622, guid: 7d9f5ed7b964935469c2c11eef0a2917, type: 3}
+      propertyPath: m_FillAmount
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7d9f5ed7b964935469c2c11eef0a2917, type: 3}
 --- !u!1001 &1669718955138873431

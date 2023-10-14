@@ -15,7 +15,7 @@ public class StoveCounter : BaseCounter, IHasProgress
     private float burningTimer;
     private BurningRecipeSO burningRecipeSO;
 
-    public event EventHandler <OnStateChangedEventArgs> OnStateChanged;
+    public event EventHandler<OnStateChangedEventArgs> OnStateChanged;
     public class OnStateChangedEventArgs
     {
         public State state;
@@ -38,7 +38,7 @@ public class StoveCounter : BaseCounter, IHasProgress
 
     private void Update()
     {
-        if(HasKitchenObject())
+        if (HasKitchenObject())
         {
             switch (state)
             {
@@ -68,6 +68,7 @@ public class StoveCounter : BaseCounter, IHasProgress
                         }); ;
 
                     }
+
                     break;
 
                 case State.Fried:
@@ -148,7 +149,30 @@ public class StoveCounter : BaseCounter, IHasProgress
             // If player hold something
             if (player.HasKitchenObject())
             {
-                // Do nothing
+                // If player is holding a plate
+                if (player.GetKitchenObject().TryGetPlateKitchenObject(out PlateKitchenObject plateKitchenObject))
+                {
+
+                    if (plateKitchenObject.TryAddIngredient(GetKitchenObject().GetKitchenObjectSO()))
+                    {
+                        GetKitchenObject().DestroySelf();
+
+                        state = State.Idle;
+
+                        OnStateChanged?.Invoke(this, new OnStateChangedEventArgs
+                        {
+                            state = state
+                        }); ;
+
+                        OnProgressChanged?.Invoke(this, new IHasProgress.OnProgressChangedEventArgs
+                        {
+                            progressNormalize = 0
+                        });
+
+                    }
+
+                }
+
             }
             // If player doesn't hold something
             else
@@ -200,7 +224,7 @@ public class StoveCounter : BaseCounter, IHasProgress
 
         return null;
     }
-    
+
     private BurningRecipeSO GetBurningRecipeSOWithInput(KitchenObjectSO inputKitchenObjectSO)
     {
         foreach (BurningRecipeSO burningRecipeSO in burningRecipeSOArray)
