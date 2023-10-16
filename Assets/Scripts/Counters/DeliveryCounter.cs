@@ -9,9 +9,10 @@ public class DeliveryCounter : BaseCounter
         // If player is holding something
         if (player.HasKitchenObject())
         {
-            // If PLayer is hlding the plate
+            // If PLayer is holding the plate
             if (player.GetKitchenObject().TryGetPlateKitchenObject(out PlateKitchenObject plateKitchenObject))
             {
+                DeliveryManager.Instance.DeliveryRecipe(plateKitchenObject);
                 // Destroy the plate
                 player.GetKitchenObject().DestroySelf();
             }

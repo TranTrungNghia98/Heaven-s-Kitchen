@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e1c0465cfd3dbc46a6308fbf066ee2e, type: 3}
+  m_Name: Cabbag Burger
+  m_EditorClassIdentifier: 
+  ingredientList:
+  - {fileID: 11400000, guid: d40fae386a945bf4b874e141dee10a9c, type: 2}
+  - {fileID: 11400000, guid: 6de419351b41570489ed7bbedc5ac63b, type: 2}
+  - {fileID: 11400000, guid: 7386723eb32bea146bee462fd053f391, type: 2}
+  recipeName: Cabbag Burger
