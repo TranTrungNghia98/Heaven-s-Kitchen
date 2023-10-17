@@ -9,6 +9,8 @@ public class DeliveryManager : MonoBehaviour
 
     public event EventHandler OnSpawnRecipe;
     public event EventHandler OnCompleteRecipe;
+    public event EventHandler OnDeliverySuccess;
+    public event EventHandler OnDeliveryFailure;
 
     [SerializeField] RecipeObjectSOListSO recipeList;
 
@@ -82,12 +84,15 @@ public class DeliveryManager : MonoBehaviour
                     Debug.Log("Player deliver true ingredient");
 
                     OnCompleteRecipe?.Invoke(this, EventArgs.Empty);
+                    // Active OnDeliverySuccess event to play sound effects
+                    OnDeliverySuccess?.Invoke(this, EventArgs.Empty);
                     return;
                 }
             }
         }
 
-        Debug.Log("Player deliver wrong ingredient");
+        // Active OnDeliveryFailure event to play sound effects
+        OnDeliveryFailure?.Invoke(this, EventArgs.Empty);
     }
 
     public List<RecipeObjectSO> GetWaitingRecipeObject()

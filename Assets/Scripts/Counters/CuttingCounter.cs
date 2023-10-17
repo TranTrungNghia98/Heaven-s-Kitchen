@@ -6,8 +6,10 @@ using UnityEngine;
 
 public class CuttingCounter : BaseCounter, IHasProgress
 {
-    public event EventHandler<IHasProgress.OnProgressChangedEventArgs> OnProgressChanged;
 
+    public static event EventHandler OnEachCut;
+
+    public event EventHandler<IHasProgress.OnProgressChangedEventArgs> OnProgressChanged;
     public event EventHandler OnCut;
 
     [SerializeField] CuttingRecipeSO[] cuttingRecipeSOArray;
@@ -31,8 +33,9 @@ public class CuttingCounter : BaseCounter, IHasProgress
 
                     OnProgressChanged?.Invoke(this, new IHasProgress.OnProgressChangedEventArgs
                     {
-                        progressNormalize = (float)cuttingProgress / cuttingRecipeSO.maxCuttingProgress
+                        progressNormalize = 0
                     });
+
                 }
             }
             // If player doesn't hold anything
@@ -83,6 +86,7 @@ public class CuttingCounter : BaseCounter, IHasProgress
             });
 
             OnCut?.Invoke(this, EventArgs.Empty);
+            OnEachCut?.Invoke(this, EventArgs.Empty);
 
             if (cuttingProgress >= cuttingRecipeSO.maxCuttingProgress)
             {
