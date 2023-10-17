@@ -45,21 +45,5 @@ public class PlateCounter : BaseCounter
             }
         }
 
-        // If player is holding something
-        else
-        {
-            // If player is holding a plate
-            if (player.GetKitchenObject().TryGetPlateKitchenObject(out PlateKitchenObject plateKitchenObject))
-            {
-
-                if (plateKitchenObject.TryAddIngredient(GetKitchenObject().GetKitchenObjectSO()))
-                {
-                    GetKitchenObject().DestroySelf();
-                }
-
-            }
-        }
-
-
     }
 }
