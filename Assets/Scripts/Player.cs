@@ -43,11 +43,19 @@ public class Player : MonoBehaviour, IKitchenObjectParent
 
     private void GameInput_OnInteractAfternateAction(object sender, EventArgs e)
     {
-        selectedClearCounter.Interactnate(this);
+        if (!GameManager.Instance.arePlaying()) return;
+
+        if (selectedClearCounter != null)
+        {
+            selectedClearCounter.Interactnate(this);
+        }
+        
     }
 
     private void GameInput_OnInteractAction(object sender, System.EventArgs e)
     {
+        if (!GameManager.Instance.arePlaying()) return;
+
         if (selectedClearCounter != null)
         {
             selectedClearCounter.Interact(this);

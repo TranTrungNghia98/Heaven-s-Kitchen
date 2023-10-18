@@ -19,6 +19,7 @@ public class DeliveryManager : MonoBehaviour
     private float spawnRecipeTimer;
     private float spawnRecipeTimerMax = 4;
     private int waittingRecipeMax = 3;
+    private int successRecipeDelivered;
 
     private void Awake()
     {
@@ -81,7 +82,7 @@ public class DeliveryManager : MonoBehaviour
                 if (plateContentsMatchRecipe)
                 {
                     waitingRecipeList.Remove(recipeObjectSO);
-                    Debug.Log("Player deliver true ingredient");
+                    successRecipeDelivered++;
 
                     OnCompleteRecipe?.Invoke(this, EventArgs.Empty);
                     // Active OnDeliverySuccess event to play sound effects
@@ -98,5 +99,10 @@ public class DeliveryManager : MonoBehaviour
     public List<RecipeObjectSO> GetWaitingRecipeObject()
     {
         return waitingRecipeList;
+    }
+
+    public int GetSuccessRecipeDelivered()
+    {
+        return successRecipeDelivered;
     }
 }
