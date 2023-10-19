@@ -25,6 +25,7 @@ public class SoundManager : MonoBehaviour
 
     private void TrashCounter_OnTrashed(object sender, System.EventArgs e)
     {
+        Debug.Log(transform.position);
         TrashCounter trashCounter = sender as TrashCounter;
         PlaySound(audioClipRefsSO.trash, trashCounter.transform.position);
     }
