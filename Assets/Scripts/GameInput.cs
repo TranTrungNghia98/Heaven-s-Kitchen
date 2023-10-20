@@ -7,6 +7,8 @@ using UnityEngine.InputSystem;
 
 public class GameInput : MonoBehaviour
 {
+    private const string PLAYER_PREFS_BINDING = "PlayerBinding";
+
     public static GameInput Instance { get; private set; }
 
     public event EventHandler OnInteractAction;
@@ -21,7 +23,10 @@ public class GameInput : MonoBehaviour
         Move_Right,
         Interact,
         InteractAlt,
-        Pause
+        Pause,
+        Gamepad_Interact,
+        Gamepad_InteractAlt,
+        Gamepad_Pause,
     }
 
     private PlayerInputAction playerInputAction;
@@ -32,12 +37,17 @@ public class GameInput : MonoBehaviour
 
 
         playerInputAction = new PlayerInputAction();
+
+        if (PlayerPrefs.HasKey(PLAYER_PREFS_BINDING))
+        {
+            playerInputAction.LoadBindingOverridesFromJson(PlayerPrefs.GetString(PLAYER_PREFS_BINDING));
+        }
+
         playerInputAction.Player.Enable();
         playerInputAction.Player.Interact.performed += Interact_performed;
         playerInputAction.Player.InteractAfternate.performed += InteractAfternate_performed;
         playerInputAction.Player.Pause.performed += Pause_performed;
 
-        Debug.Log(GetBindingText(Binding.Move_Up));
     }
 
     private void OnDestroy()
@@ -93,6 +103,85 @@ public class GameInput : MonoBehaviour
                 return playerInputAction.Player.InteractAfternate.bindings[0].ToDisplayString();
             case Binding.Pause:
                 return playerInputAction.Player.Pause.bindings[0].ToDisplayString();
+
+            case Binding.Gamepad_Interact:
+                return playerInputAction.Player.Interact.bindings[1].ToDisplayString();
+            case Binding.Gamepad_InteractAlt:
+                return playerInputAction.Player.InteractAfternate.bindings[1].ToDisplayString();
+            case Binding.Gamepad_Pause:
+                return playerInputAction.Player.Pause.bindings[1].ToDisplayString();
         }
+    }
+
+    public void RebindingKey(Binding binding, Action onActionRebound)
+    {
+        playerInputAction.Disable();
+        InputAction inputAction;
+        int bindingIndex;
+
+        switch (binding)
+        {
+            default:
+            case Binding.Move_Up:
+                inputAction = playerInputAction.Player.Move;
+                bindingIndex = 1;
+                break;
+
+            case Binding.Move_Down:
+                inputAction = playerInputAction.Player.Move;
+                bindingIndex = 2;
+                break;
+
+            case Binding.Move_Left:
+                inputAction = playerInputAction.Player.Move;
+                bindingIndex = 3;
+                break;
+
+            case Binding.Move_Right:
+                inputAction = playerInputAction.Player.Move;
+                bindingIndex = 4;
+                break;
+
+            case Binding.Interact:
+                inputAction = playerInputAction.Player.Interact;
+                bindingIndex = 0;
+                break;
+
+            case Binding.InteractAlt:
+                inputAction = playerInputAction.Player.InteractAfternate;
+                bindingIndex = 0;
+                break;
+
+            case Binding.Pause:
+                inputAction = playerInputAction.Player.Pause;
+                bindingIndex = 0;
+                break;
+
+            case Binding.Gamepad_Interact:
+                inputAction = playerInputAction.Player.Interact;
+                bindingIndex = 1;
+                break;
+
+            case Binding.Gamepad_InteractAlt:
+                inputAction = playerInputAction.Player.InteractAfternate;
+                bindingIndex = 1;
+                break;
+
+            case Binding.Gamepad_Pause:
+                inputAction = playerInputAction.Player.Pause;
+                bindingIndex = 1;
+                break;
+        }
+
+        inputAction.PerformInteractiveRebinding(bindingIndex).OnComplete(callback =>
+        {
+            callback.Dispose();
+            playerInputAction.Enable();
+            onActionRebound();
+
+            PlayerPrefs.SetString(PLAYER_PREFS_BINDING, playerInputAction.SaveBindingOverridesAsJson());
+            PlayerPrefs.Save();
+        }).Start();
+
     }
 }
