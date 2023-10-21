@@ -30,8 +30,8 @@ public class DeliveryManager : MonoBehaviour
     private void Update()
     {
         spawnRecipeTimer -= Time.deltaTime;
-        // Spawn new recipe after few seconds and recipe not max
-        if (spawnRecipeTimer <= 0 && waitingRecipeList.Count <= waittingRecipeMax)
+        // Spawn new recipe after few seconds, recipe not max and game are playing
+        if (GameManager.Instance.arePlaying() && spawnRecipeTimer <= 0 && waitingRecipeList.Count <= waittingRecipeMax)
         {
             spawnRecipeTimer = spawnRecipeTimerMax;
             RecipeObjectSO recipeObjectSO = recipeList.recipeObjectSOList[UnityEngine.Random.Range(0, recipeList.recipeObjectSOList.Count)];
